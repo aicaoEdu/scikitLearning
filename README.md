@@ -1,11 +1,11 @@
 # scikitLearning   
-Clustering analysis of samples into different groups using package sklearn    
+Clustering analysis of samples into different groups using package sklearn by following steps:    
 step 1: read data files    
 step 2: data normalization    
 step 3: modelling    
 step 4: graphical visualization    
 
-# install and run   
+# Install and run   
 [Scikit-learn](http://scikit-learn.org/stable/) requires:   
 Python (>= 2.7 or >= 3.3),   
 NumPy (>= 1.8.2),   
