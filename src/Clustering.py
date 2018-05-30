@@ -152,7 +152,7 @@ if __name__ == '__main__':
     # step 2: data normalization
 
 
-    # step 3: k-means clustering 
+    # step 3: modelling: k-means clustering 
     params = [2, 3, 4, 5, 8]
     kmeans_results = []
     kmeans_metrics = []
