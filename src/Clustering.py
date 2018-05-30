@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Data preparation
 Created on 20180516
 @author: peishun
 """
@@ -13,7 +12,6 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 from sklearn import metrics 
 # from sklearn import datasets
-
 
 def is_number(s):
     try:
@@ -71,7 +69,7 @@ def read_data(data_file):
 
 
 
-
+'''
 fignum = 1
 titles = ['8 clusters', '3 clusters', '3 clusters, bad initialization']
 for name, est in estimators:
@@ -117,51 +115,54 @@ ax.set_ylabel('Sepal length')
 ax.set_zlabel('Petal length')
 ax.set_title('Ground Truth')
 ax.dist = 12
-
 fig.show()
+'''
+def plot1(train_x, train_y, kmeans_results, kmeans_metrics,params,result_dir):
+    plt.figure(figsize=(8, 10))  
+    plt.subplot(3, 2, 1) 
+    plt.title('Samples') 
+    plt.scatter(train_x[:,0], train_x[:,1],c=train_y) 
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'b']  
+    markers = ['o', 's', 'D', 'v', '^', 'p', '*', '+']     
+    subplot_counter = 1   
+    plt.subplot(3, 2, subplot_counter)
+    for i in range(len(params)):  
+        subplot_counter += 1
+        plt.subplot(3, 2, subplot_counter)
+        for j, l in enumerate(kmeans_results[i]): 
+            plt.plot(train_x[:,0][j], train_x[:,1][j], color=colors[l],marker=markers[l],ls='None')   
+            plt.title('K = %s, silhouette score = %.03f' % (params[i],kmeans_metrics[i]))
+            #plt.xlabel('x')
+            #plt.ylabel('x')
+            #plt.show()
+    plt.savefig(result_dir+"fig1.png")
 
-
-
+#def plot2(train_x, train_y):
+    ##
+    
 if __name__ == '__main__':
     # step 1: read data files
     # iris = datasets.load_iris()
     # X = iris.data
     # y = iris.targe
     data_file = "../data/iris.txt"
+    result_dir = "../result/"
     train_x, train_y, train_label, varName,speciesName = read_data(data_file)
+    
     # step 2: data normalization
 
 
     # step 3: k-means clustering 
-    plt.figure(figsize=(8, 10))  
-    plt.subplot(3, 2, 1) 
-    plt.title('Samples') 
-    plt.scatter(train_x[:,0], train_x[:,1],c=train_y) 
-    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'b']  
-    markers = ['o', 's', 'D', 'v', '^', 'p', '*', '+']  
-    tests = [2, 3, 4, 5, 8]  
-    subplot_counter = 1  
-    for t in tests:  
-        subplot_counter += 1  
-        plt.subplot(3, 2, subplot_counter) 
+    params = [2, 3, 4, 5, 8]
+    kmeans_results = []
+    kmeans_metrics = []
+    for n in params:      
         np.random.seed(5)
-        kmeans_model = KMeans(n_clusters=t).fit(train_x)
-        #centroids = kmeans_model.cluster_centers_ 
-        for i, l in enumerate(kmeans_model.labels_): 
-            # step 4: graphical visualization
-            plt.plot(train_x[:,0][i], train_x[:,1][i], color=colors[l],marker=markers[l],ls='None')   
-            plt.title('K = %s, silhouette score = %.03f' % (t,metrics.silhouette_score(train_x,kmeans_model.labels_,metric='euclidean'))) 
-     
-    ## # step 4: 3D graphical visualization
-    subplot_counter = 1  
-    for t in tests:  
-        subplot_counter += 1  
-        plt.subplot(3, 2, subplot_counter) 
-        np.random.seed(5)
-        kmeans_model = KMeans(n_clusters=t).fit(train_x)
-        #centroids = kmeans_model.cluster_centers_ 
-        for i, l in enumerate(kmeans_model.labels_): 
-            # step 4: graphical visualization
-            plt.plot(train_x[:,0][i], train_x[:,1][i], color=colors[l],marker=markers[l],ls='None')   
-            plt.title('K = %s, silhouette score = %.03f' % (t,metrics.silhouette_score(train_x,kmeans_model.labels_,metric='euclidean'))) 
+        kmeans_model = KMeans(n_clusters=n).fit(train_x)
+        #centroids = kmeans_model.cluster_centers_
+        kmeans_results.append(kmeans_model.labels_)
+        kmeans_metrics.append(metrics.silhouette_score(train_x,kmeans_model.labels_,metric='euclidean'))
+  
+    ## # step 4: graphical visualization
+    plot1(train_x, train_y, kmeans_results, kmeans_metrics,params,result_dir)
 
