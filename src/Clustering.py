@@ -131,14 +131,27 @@ def plot1(train_x, train_y, kmeans_results, kmeans_metrics,params,result_dir):
         plt.subplot(3, 2, subplot_counter)
         for j, l in enumerate(kmeans_results[i]): 
             plt.plot(train_x[:,0][j], train_x[:,1][j], color=colors[l],marker=markers[l],ls='None')   
-            plt.title('K = %s, silhouette score = %.03f' % (params[i],kmeans_metrics[i]))
-            #plt.xlabel('x')
-            #plt.ylabel('x')
-            #plt.show()
+        plt.title('K = %s, silhouette score = %.03f' % (params[i],kmeans_metrics[i]))
+        #plt.xlabel('x')
+        #plt.ylabel('x')
+        #plt.show()
     plt.savefig(result_dir+"fig1.png")
 
-#def plot2(train_x, train_y):
-    ##
+def plot2(train_x, train_y, kmeans_results, kmeans_metrics,params,result_dir):  
+    fig = plt.figure(figsize=(8, 10))
+    ax = fig.add_subplot(3, 2, 1, projection='3d')
+    ax.scatter(train_x[:,0], train_x[:,1], train_x[:,2],c=train_y)
+    ax.set_title('Samples')
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'b']  
+    markers = ['o', 's', 'D', 'v', '^', 'p', '*', '+']     
+    subplot_counter = 1   
+    for i in range(len(params)):  
+        subplot_counter += 1
+        ax = fig.add_subplot(3, 2, subplot_counter, projection='3d')
+        for j, l in enumerate(kmeans_results[i]): 
+            ax.scatter(train_x[:,0][j], train_x[:,1][j], train_x[:,2][j], color=colors[l],marker=markers[l])
+        ax.set_title('K = %s, silhouette score = %.03f' % (params[i],kmeans_metrics[i]))
+    plt.savefig(result_dir+"fig2.png")
     
 if __name__ == '__main__':
     # step 1: read data files
@@ -165,4 +178,6 @@ if __name__ == '__main__':
   
     ## # step 4: graphical visualization
     plot1(train_x, train_y, kmeans_results, kmeans_metrics,params,result_dir)
+    plot2(train_x, train_y, kmeans_results, kmeans_metrics,params,result_dir)
+    
 
